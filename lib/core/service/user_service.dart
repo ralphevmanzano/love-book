@@ -11,7 +11,7 @@ class UserService implements UserApi {
   }
   
   @override
-  Future<DocumentReference> addUser(Map user) {
+  Future<DocumentReference> addUser(Map<String, dynamic> user) {
     try {
       return ref.add(user);
     } catch(e) {

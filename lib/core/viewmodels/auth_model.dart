@@ -23,22 +23,19 @@ class AuthModel extends BaseModel {
   }
 
   Future<void> _checkIfUserIsLoggedIn() async {
-    FirebaseUser user = await _authService.auth.currentUser();
-    _authState =
-        (user != null) ? AuthState.Authenticated : AuthState.Unauthenticated;
-    notifyListeners();
+//    FirebaseUser user = await _authService.auth.currentUser();
+//    _authState =
+//        (user != null) ? AuthState.Authenticated : AuthState.Unauthenticated;
+//    notifyListeners();
+
     _listenToAuthChanges();
   }
 
   void _listenToAuthChanges() {
     _authService.auth.onAuthStateChanged.listen((user) {
-      if (user != null) {
-        _authState = AuthState.Authenticated;
-        notifyListeners();
-      } else {
-        _authState = AuthState.Unauthenticated;
-        notifyListeners();
-      }
+      print('AuthChanged called----------');
+      _authState = user != null ? AuthState.Authenticated : AuthState.Unauthenticated;
+      setState(ViewState.Idle);
     });
   }
 
@@ -49,7 +46,6 @@ class AuthModel extends BaseModel {
       final fbUser = await _authService.register(name, email, password);
       User user = User.fromFirebaseUser(fbUser);
       await _userService.addUser(user.toJson());
-      setState(ViewState.Idle);
       _authState = AuthState.Authenticated;
     } catch (e) {
       print('Handled here $e');
@@ -61,7 +57,6 @@ class AuthModel extends BaseModel {
     try {
       setState(ViewState.Busy);
       final user = await _authService.loginEmailPassword(email, password);
-      setState(ViewState.Idle);
       print(user);
     } catch (e) {
       setState(ViewState.Idle);
@@ -73,7 +68,6 @@ class AuthModel extends BaseModel {
     try {
       setState(ViewState.Busy);
       final isSignedOut = await _authService.signOut();
-      setState(ViewState.Idle);
       return isSignedOut;
     } catch (e) {
       setState(ViewState.Idle);
