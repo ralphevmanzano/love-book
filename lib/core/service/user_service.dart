@@ -9,14 +9,22 @@ class UserService implements UserApi {
   UserService() {
     ref = _db.collection(path);
   }
-  
+
   @override
   Future<DocumentReference> addUser(Map<String, dynamic> user) {
     try {
       return ref.add(user);
-    } catch(e) {
+    } catch (e) {
       throw Exception(e);
     }
   }
 
+  @override
+  Future<void> addPartner(String uid, Map<String, dynamic> partner) {
+    try {
+      return ref.document(uid).updateData(partner);
+    } catch (e) {
+      throw Exception(e);
+    }
+  }
 }

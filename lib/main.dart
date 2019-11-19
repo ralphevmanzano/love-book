@@ -44,13 +44,14 @@ class MyApp extends StatelessWidget {
         navigatorKey: Routes.sailor.navigatorKey,
         home: Consumer<AuthModel>(
           builder: (ctx, model, child) {
-            print('------REBUILD------${model.authState}');
+            print('REBUILD------${model.authState}');
             switch (model.authState) {
               case AuthState.Loading:
                 return SplashView();
               case AuthState.Unauthenticated:
                 return LoginView();
               case AuthState.Authenticated:
+                
                 return HomeView();
               default:
                 return LoginView();

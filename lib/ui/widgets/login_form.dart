@@ -55,6 +55,7 @@ class _LoginFormState extends State<LoginForm> {
 
     print('email: $email\tpassword: $password');
     await model.loginEmailPassword(email, password);
+    
   }
 
   void _saveEmail(String email) {

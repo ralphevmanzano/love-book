@@ -13,40 +13,41 @@ enum AuthState { Authenticated, Unauthenticated, Loading }
 class AuthModel extends BaseModel {
   final AuthService _authService = locator<AuthService>();
   final UserService _userService = locator<UserService>();
-  
+  User _user;
+
   AuthState _authState = AuthState.Loading;
-  
+
   AuthState get authState => _authState;
+
+  User get user => _user;
 
   AuthModel() {
     _checkIfUserIsLoggedIn();
   }
 
   Future<void> _checkIfUserIsLoggedIn() async {
-//    FirebaseUser user = await _authService.auth.currentUser();
-//    _authState =
-//        (user != null) ? AuthState.Authenticated : AuthState.Unauthenticated;
-//    notifyListeners();
-
     _listenToAuthChanges();
   }
 
   void _listenToAuthChanges() {
     _authService.auth.onAuthStateChanged.listen((user) {
-      print('AuthChanged called----------');
-      _authState = user != null ? AuthState.Authenticated : AuthState.Unauthenticated;
+      if (user == null) {
+        _user = null;
+      } else {
+        _user = User.fromFirebaseUser(user);
+      }
+      _authState =
+          user != null ? AuthState.Authenticated : AuthState.Unauthenticated;
       setState(ViewState.Idle);
     });
   }
 
-  Future<void> register(
-      String name, String email, String password) async {
+  Future<void> register(String name, String email, String password) async {
     try {
       setState(ViewState.Busy);
       final fbUser = await _authService.register(name, email, password);
-      User user = User.fromFirebaseUser(fbUser);
-      await _userService.addUser(user.toJson());
-      _authState = AuthState.Authenticated;
+      _user = User.fromFirebaseUser(fbUser);
+      await _userService.addUser(_user.toJson());
     } catch (e) {
       print('Handled here $e');
       setState(ViewState.Idle);
@@ -56,7 +57,9 @@ class AuthModel extends BaseModel {
   Future<void> loginEmailPassword(String email, String password) async {
     try {
       setState(ViewState.Busy);
-      final user = await _authService.loginEmailPassword(email, password);
+      FirebaseUser firebaseUser =
+          await _authService.loginEmailPassword(email, password);
+      final user = User.fromFirebaseUser(firebaseUser);
       print(user);
     } catch (e) {
       setState(ViewState.Idle);

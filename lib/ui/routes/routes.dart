@@ -5,9 +5,9 @@ import 'package:sailor/sailor.dart';
 class Routes {
   static const LOGIN_VIEW = '/login';
   static const SIGNUP_VIEW = '/signup';
-  
+
   static final sailor = Sailor();
-  
+
   static void createRoutes() {
     sailor.addRoutes([
       SailorRoute(
@@ -18,6 +18,8 @@ class Routes {
       ),
       SailorRoute(
         name: SIGNUP_VIEW,
+//        defaultTransitions: [SailorTransition.slide_from_right],
+//        defaultTransitionDuration: Duration(milliseconds: 200),
         builder: (context, args, params) {
           return SignupView();
         },

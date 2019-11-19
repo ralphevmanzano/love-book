@@ -3,6 +3,7 @@ import 'package:love_book/ui/routes/routes.dart';
 import 'package:love_book/ui/widgets/login_form.dart';
 
 class LoginView extends StatelessWidget {
+  
   Widget _buildHeader(ThemeData theme) {
     return Container(
       width: double.infinity,
@@ -47,7 +48,7 @@ class LoginView extends StatelessWidget {
             ),
           ),
           onTap: () {
-            Routes.sailor.navigate(Routes.SIGNUP_VIEW);
+            Routes.sailor(Routes.SIGNUP_VIEW);
           },
         )
       ],

@@ -5,6 +5,7 @@ import 'package:flutter/cupertino.dart';
 class User {
   final String userId;
   final String email;
+  String photoUrl;
   String partnerId;
   String name;
 
@@ -13,12 +14,16 @@ class User {
     @required this.email,
     this.name = '',
     this.partnerId = '',
+    this.photoUrl = ''
   });
 
   toJson() {
     return {
       "userId": userId,
       "email": email,
+      "photoUrl": photoUrl,
+      "partnerId": partnerId,
+      "name": name,
     };
   }
   

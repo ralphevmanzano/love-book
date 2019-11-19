@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:love_book/core/viewmodels/auth_model.dart';
 import 'package:love_book/core/viewstate.dart';
+import 'package:love_book/ui/routes/routes.dart';
 import 'package:provider/provider.dart';
 import 'package:regexed_validator/regexed_validator.dart';
 
@@ -99,6 +100,7 @@ class _SignupFormState extends State<SignupForm> {
         'name: ${_currentUser['name']}\temail: ${_currentUser['email']}\tpw: ${_currentUser['password']}');
     await model.register(
         _currentUser['name'], _currentUser['email'], _currentUser['password']);
+    Routes.sailor.pop();
   }
 
   void _focusOnNode(FocusNode node) {
