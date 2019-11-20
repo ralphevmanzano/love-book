@@ -51,7 +51,6 @@ class MyApp extends StatelessWidget {
               case AuthState.Unauthenticated:
                 return LoginView();
               case AuthState.Authenticated:
-                
                 return HomeView();
               default:
                 return LoginView();

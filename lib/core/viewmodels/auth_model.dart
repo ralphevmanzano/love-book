@@ -13,14 +13,14 @@ enum AuthState { Authenticated, Unauthenticated, Loading }
 class AuthModel extends BaseModel {
   final AuthService _authService = locator<AuthService>();
   final UserService _userService = locator<UserService>();
+  AuthState _authState = AuthState.Loading;
+  String _uid;
   User _user;
 
-  AuthState _authState = AuthState.Loading;
-
   AuthState get authState => _authState;
-
-  User get user => _user;
-
+//  User get user => _user;
+  String get uid => _uid;
+  
   AuthModel() {
     _checkIfUserIsLoggedIn();
   }
@@ -31,11 +31,12 @@ class AuthModel extends BaseModel {
 
   void _listenToAuthChanges() {
     _authService.auth.onAuthStateChanged.listen((user) {
-      if (user == null) {
-        _user = null;
+      if (user != null ) {
+        _uid = user.uid;
       } else {
-        _user = User.fromFirebaseUser(user);
+        _uid = null;
       }
+      
       _authState =
           user != null ? AuthState.Authenticated : AuthState.Unauthenticated;
       setState(ViewState.Idle);
@@ -47,7 +48,8 @@ class AuthModel extends BaseModel {
       setState(ViewState.Busy);
       final fbUser = await _authService.register(name, email, password);
       _user = User.fromFirebaseUser(fbUser);
-      await _userService.addUser(_user.toJson());
+      _user.name = name;
+      await _userService.addUser(fbUser.uid,_user.toJson());
     } catch (e) {
       print('Handled here $e');
       setState(ViewState.Idle);

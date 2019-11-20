@@ -11,18 +11,27 @@ class UserService implements UserApi {
   }
 
   @override
-  Future<DocumentReference> addUser(Map<String, dynamic> user) {
+  Future<DocumentReference> addUser(String uid, Map<String, dynamic> user) {
     try {
-      return ref.add(user);
+      return ref.document(uid).setData(user);
     } catch (e) {
       throw Exception(e);
     }
   }
 
   @override
-  Future<void> addPartner(String uid, Map<String, dynamic> partner) {
+  Future<void> updateUser(String uid, Map<String, dynamic> newData) {
     try {
-      return ref.document(uid).updateData(partner);
+      return ref.document(uid).updateData(newData);
+    } catch (e) {
+      throw Exception(e);
+    }
+  }
+
+  @override
+  Future<DocumentSnapshot> getUser(String uid) {
+    try {
+      return ref.document(uid).get();
     } catch (e) {
       throw Exception(e);
     }

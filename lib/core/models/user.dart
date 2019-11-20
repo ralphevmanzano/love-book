@@ -8,7 +8,7 @@ class User {
   String photoUrl;
   String partnerId;
   String name;
-
+  
   User({
     @required this.userId,
     @required this.email,
@@ -16,10 +16,10 @@ class User {
     this.partnerId = '',
     this.photoUrl = ''
   });
-
+  
   toJson() {
     return {
-      "userId": userId,
+//      "userId": userId,
       "email": email,
       "photoUrl": photoUrl,
       "partnerId": partnerId,
@@ -30,4 +30,11 @@ class User {
   User.fromFirebaseUser(FirebaseUser fu)
       : userId = fu.uid ?? '',
         email = fu.email ?? '';
+  
+  User.fromMap(String uid, Map<String, dynamic> map)
+      : name = map['name'] ?? '',
+        userId = uid ?? '',
+        email = map['email'] ?? '',
+        photoUrl = map['photoUrl'] ?? '',
+        partnerId = map['partnerId'] ?? '';
 }
