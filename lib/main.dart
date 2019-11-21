@@ -3,7 +3,7 @@ import 'package:love_book/locator.dart';
 import 'package:love_book/ui/routes/routes.dart';
 import 'package:love_book/ui/views/login_view.dart';
 import 'package:love_book/ui/views/splash_view.dart';
-import 'package:love_book/utils/Color.dart' as c;
+import 'package:love_book/utils/color.dart' as c;
 import 'package:provider/provider.dart';
 
 import 'core/viewmodels/auth_model.dart';
