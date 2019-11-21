@@ -36,4 +36,17 @@ class UserService implements UserApi {
       throw Exception(e);
     }
   }
+
+  Future<QuerySnapshot> getUsers(String query) {
+    print(query);
+    try {
+      return ref
+          .where('name', isGreaterThanOrEqualTo: query)
+          .where('name', isLessThanOrEqualTo: query + '\uf8ff')
+          .limit(15)
+          .getDocuments();
+    } catch (e) {
+      throw Exception(e);
+    }
+  }
 }

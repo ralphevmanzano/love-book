@@ -5,7 +5,7 @@ import 'package:love_book/core/models/alert/alert_response.dart';
 
 class DialogService {
   Function(AlertRequest) _showDialogListener;
-  Completer _dialogCompleter;
+  Completer<AlertResponse> _dialogCompleter;
 
   /// Registers a callback function. Typically to show the dialog
   void registerDialogListener(Function(AlertRequest) showDialogListener) {
@@ -13,20 +13,14 @@ class DialogService {
   }
 
   /// Calls the dialog listener and returns a Future that will wait for dialogComplete.
-  Future<AlertResponse> showDialog({
-    String title,
-    String description,
-    String posButtonTitle,
-    String negButtonTitle,
-    String imageUrl,
-  }) {
+  Future<AlertResponse> showDialog(AlertRequest alertRequest) {
     _dialogCompleter = Completer();
     _showDialogListener(AlertRequest(
-      title: title,
-      description: description,
-      posButtonTitle: posButtonTitle,
-      negButtonTitle: negButtonTitle,
-      imageUrl: imageUrl,
+      title: alertRequest.title,
+      description: alertRequest.description,
+      posButtonTitle: alertRequest.posButtonTitle,
+      negButtonTitle: alertRequest.negButtonTitle,
+      imageUrl: alertRequest.imageUrl,
     ));
     return _dialogCompleter.future;
   }

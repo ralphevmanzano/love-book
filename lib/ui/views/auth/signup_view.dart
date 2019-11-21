@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:love_book/ui/routes/routes.dart';
-import 'package:love_book/ui/widgets/signup_form.dart';
+import 'package:love_book/ui/widgets/auth/signup_form.dart';
 
 class SignupView extends StatefulWidget {
   @override

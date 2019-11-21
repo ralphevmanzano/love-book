@@ -26,7 +26,13 @@ class User {
       "name": name,
     };
   }
-  
+
+
+  @override
+  String toString() {
+    return 'email: $email, photoUrl: $photoUrl, partnerId: $partnerId, name: $name';
+  }
+
   User.fromFirebaseUser(FirebaseUser fu)
       : userId = fu.uid ?? '',
         email = fu.email ?? '';

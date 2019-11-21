@@ -30,6 +30,7 @@ class _DialogManagerState extends State<DialogManager> {
   }
 
   void _showDialog(AlertRequest request) {
+    
     Alert(
         context: context,
         title: request.title,

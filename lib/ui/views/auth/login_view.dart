@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:love_book/ui/routes/routes.dart';
-import 'package:love_book/ui/widgets/login_form.dart';
+import 'package:love_book/ui/widgets/auth/login_form.dart';
 
 class LoginView extends StatelessWidget {
   

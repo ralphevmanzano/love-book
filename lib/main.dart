@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:love_book/core/viewmodels/requests_model.dart';
 import 'package:love_book/locator.dart';
 import 'package:love_book/ui/routes/routes.dart';
-import 'package:love_book/ui/views/login_view.dart';
+import 'package:love_book/ui/views/auth/login_view.dart';
 import 'package:love_book/ui/views/splash_view.dart';
 import 'package:love_book/utils/color.dart' as c;
+import 'package:love_book/utils/dialog_manager.dart';
 import 'package:provider/provider.dart';
 
 import 'core/viewmodels/auth_model.dart';
@@ -25,6 +27,9 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider.value(
           value: locator<AuthModel>(),
         ),
+        ChangeNotifierProvider.value(
+          value: locator<RequestsModel>(),
+        ),
       ],
       child: MaterialApp(
         title: 'Lovebook',
@@ -36,29 +41,29 @@ class MyApp extends StatelessWidget {
             title: TextStyle(fontSize: 28, fontFamily: 'Ubuntu'),
           ),
           /*buttonTheme: ButtonThemeData(
-            buttonColor: theme.primaryColor,
-            textTheme: ButtonTextTheme.primary,
-          ),*/
+              buttonColor: theme.primaryColor,
+              textTheme: ButtonTextTheme.primary,
+            ),*/
         ),
         onGenerateRoute: Routes.sailor.generator(),
         navigatorKey: Routes.sailor.navigatorKey,
-        home: Consumer<AuthModel>(
-          builder: (ctx, model, child) {
-            print('REBUILD------${model.authState}');
-            switch (model.authState) {
-              case AuthState.Loading:
-                return SplashView();
-              case AuthState.Unauthenticated:
-                return LoginView();
-              case AuthState.Authenticated:
-                return HomeView();
-              default:
-                return LoginView();
-            }
-          },
+        home: DialogManager(
+          child: Consumer<AuthModel>(
+            builder: (ctx, model, child) {
+              switch (model.authState) {
+                case AuthState.Loading:
+                  return SplashView();
+                case AuthState.Unauthenticated:
+                  return LoginView();
+                case AuthState.Authenticated:
+                  return HomeView();
+                default:
+                  return LoginView();
+              }
+            },
+          ),
         ),
       ),
     );
   }
 }
-

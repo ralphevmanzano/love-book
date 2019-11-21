@@ -6,16 +6,19 @@ import 'package:love_book/core/service/user_service.dart';
 import 'package:love_book/core/viewmodels/auth_model.dart';
 import 'package:love_book/core/viewmodels/home_model.dart';
 import 'package:love_book/core/viewmodels/requests_model.dart';
+import 'package:love_book/core/viewmodels/search_model.dart';
+import 'package:love_book/ui/views/search_view.dart';
 
 GetIt locator = GetIt.instance;
 
 void setupLocator() {
   locator.registerLazySingleton(() => AuthService());
-  locator.registerLazySingleton(() => UserService());
   locator.registerLazySingleton(() => RequestsService());
   locator.registerLazySingleton(() => DialogService());
+  locator.registerFactory(() => UserService());
   
   locator.registerLazySingleton(() => AuthModel());
+  locator.registerFactory(() => SearchModel());
   locator.registerFactory(() => HomeModel());
   locator.registerFactory(() => RequestsModel());
 }

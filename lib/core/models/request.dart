@@ -4,12 +4,14 @@ class Request {
   String fromId;
   String fromPhotoUrl;
   String toId;
+  String fromName;
   DateTime createdAt;
 
   Request({
     this.fromId,
     this.fromPhotoUrl,
     this.toId,
+    this.fromName,
     this.createdAt,
   });
 
@@ -18,6 +20,7 @@ class Request {
       "fromId": fromId,
       "fromPhotoUrl": fromPhotoUrl,
       "toId": toId,
+      "fromName": fromName,
       "createdAt": createdAt,
     };
   }
@@ -32,5 +35,6 @@ class Request {
       : fromId = map['fromId'] ?? '',
         toId = map['toId'] ?? '',
         fromPhotoUrl = map['fromPhotoUrl'],
-        createdAt = map['createdAt'];
+        createdAt = map['createdAt'],
+        fromName = map['fromName'];
 }

@@ -5,6 +5,7 @@ abstract class UserApi {
   
   Future<DocumentSnapshot> getUser(String uid);
   
-  Future<void> updateUser(String uid, Map<String, dynamic> newData);
+  Future<QuerySnapshot> getUsers(String query);
   
+  Future<void> updateUser(String uid, Map<String, dynamic> newData);
 }

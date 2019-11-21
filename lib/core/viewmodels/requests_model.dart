@@ -1,13 +1,13 @@
-import 'dart:async';
 import 'dart:core';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter/cupertino.dart';
+import 'package:love_book/core/models/alert/alert_request.dart';
 import 'package:love_book/core/models/request.dart';
 import 'package:love_book/core/service/requests_service.dart';
+import 'package:love_book/core/viewmodels/base_model.dart';
 import 'package:love_book/locator.dart';
 
-class RequestsModel extends ChangeNotifier {
+class RequestsModel extends BaseModel {
   final _requestsService = locator<RequestsService>();
 
   Request request;
@@ -17,11 +17,24 @@ class RequestsModel extends ChangeNotifier {
   }
 
   void _onRequestsChanged(DocumentSnapshot snapshot) {
+    print('0000000000000000000000000');
     print(snapshot.data);
-    if (snapshot.data == null) request = null;
+    if (snapshot.data == null)
+      request = null;
     else {
       request = Request.fromMap(snapshot.data);
+      final alertRequest = AlertRequest(
+          title: 'New relationship request!',
+          description:
+              '${request.fromName} has requested a relationship with you. Do you confirm this request?',
+          posButtonTitle: 'Ok',
+          negButtonTitle: 'Cancel',
+          imageUrl: request.fromPhotoUrl);
+      showAlert(
+        alertRequest,
+        () => print('Completed-----'),
+        () => print('Canceled-----'),
+      );
     }
-    notifyListeners();
   }
 }
