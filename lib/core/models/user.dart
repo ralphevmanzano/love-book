@@ -19,12 +19,15 @@ class User {
   
   toJson() {
     return {
-//      "userId": userId,
       "email": email,
       "photoUrl": photoUrl,
       "partnerId": partnerId,
       "name": name,
     };
+  }
+  
+  bool hasNoPartner() {
+    return partnerId.isEmpty || partnerId == null;
   }
 
 

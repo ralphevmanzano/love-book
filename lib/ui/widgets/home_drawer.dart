@@ -25,6 +25,7 @@ class HomeDrawer extends StatelessWidget {
             ),
             onTap: () {
               Routes.sailor.pop();
+              Routes.sailor(Routes.PROFILE_VIEW);
             },
           ),
           ListTile(

@@ -1,5 +1,6 @@
 import 'package:love_book/ui/views/auth/login_view.dart';
 import 'package:love_book/ui/views/auth/signup_view.dart';
+import 'package:love_book/ui/views/profile_view.dart';
 import 'package:love_book/ui/views/search_view.dart';
 import 'package:sailor/sailor.dart';
 
@@ -7,6 +8,7 @@ class Routes {
   static const LOGIN_VIEW = '/login';
   static const SIGNUP_VIEW = '/signup';
   static const SEARCH_VIEW = '/search';
+  static const PROFILE_VIEW = '/profile';
 
   static final sailor = Sailor();
 
@@ -30,6 +32,12 @@ class Routes {
         name: SEARCH_VIEW,
         builder: (context, args, params) {
           return SearchView();
+        },
+      ),
+      SailorRoute(
+        name: PROFILE_VIEW,
+        builder: (context, args, params) {
+          return ProfileView();
         },
       ),
     ]);

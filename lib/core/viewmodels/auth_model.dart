@@ -1,5 +1,4 @@
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/foundation.dart';
 import 'package:love_book/core/models/user.dart';
 import 'package:love_book/core/service/auth_service.dart';
 import 'package:love_book/core/service/user_service.dart';
@@ -18,9 +17,9 @@ class AuthModel extends BaseModel {
   User _user;
 
   AuthState get authState => _authState;
-//  User get user => _user;
+
   String get uid => _uid;
-  
+
   AuthModel() {
     _checkIfUserIsLoggedIn();
   }
@@ -31,12 +30,12 @@ class AuthModel extends BaseModel {
 
   void _listenToAuthChanges() {
     _authService.auth.onAuthStateChanged.listen((user) {
-      if (user != null ) {
+      if (user != null) {
         _uid = user.uid;
       } else {
         _uid = null;
       }
-      
+
       _authState =
           user != null ? AuthState.Authenticated : AuthState.Unauthenticated;
       setState(ViewState.Idle);
@@ -49,34 +48,29 @@ class AuthModel extends BaseModel {
       final fbUser = await _authService.register(name, email, password);
       _user = User.fromFirebaseUser(fbUser);
       _user.name = name;
-      await _userService.addUser(fbUser.uid,_user.toJson());
-    } catch (e) {
-      print('Handled here $e');
-      setState(ViewState.Idle);
-    }
-  }
-
-  Future<void> loginEmailPassword(String email, String password) async {
-    try {
-      setState(ViewState.Busy);
-      FirebaseUser firebaseUser =
-          await _authService.loginEmailPassword(email, password);
-      final user = User.fromFirebaseUser(firebaseUser);
-      print(user);
+      await _userService.addUser(fbUser.uid, _user.toJson());
     } catch (e) {
       setState(ViewState.Idle);
       print(e);
     }
   }
 
-  Future<bool> logOut() async {
+  Future<void> loginEmailPassword(String email, String password) async {
     try {
       setState(ViewState.Busy);
-      final isSignedOut = await _authService.signOut();
-      return isSignedOut;
+      await _authService.loginEmailPassword(email, password);
     } catch (e) {
       setState(ViewState.Idle);
-      return false;
+      print(e);
+    }
+  }
+
+  Future<void> logOut() async {
+    try {
+      setState(ViewState.Busy);
+      await _authService.signOut();
+    } catch (e) {
+      setState(ViewState.Idle);
     }
   }
 }

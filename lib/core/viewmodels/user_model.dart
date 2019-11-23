@@ -5,7 +5,7 @@ import 'package:love_book/core/viewmodels/base_model.dart';
 import 'package:love_book/core/viewstate.dart';
 import 'package:love_book/locator.dart';
 
-class HomeModel extends BaseModel {
+class UserModel extends BaseModel {
   final _userService = locator<UserService>();
   
   User _user;
@@ -13,12 +13,12 @@ class HomeModel extends BaseModel {
   
   Future<void> getUser(String uid) async {
     try {
-      setState(ViewState.Busy);
+//      setState(ViewState.Busy);
       DocumentSnapshot ds = await _userService.getUser(uid);
       _user = User.fromMap(uid, ds.data);
-      setState(ViewState.Idle);
+//      setState(ViewState.Idle);
     } catch (e) {
-      setState(ViewState.Idle);
+//      setState(ViewState.Idle);
       print(e);
     }
   }

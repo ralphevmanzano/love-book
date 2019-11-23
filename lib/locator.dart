@@ -4,7 +4,8 @@ import 'package:love_book/core/service/dialog_service.dart';
 import 'package:love_book/core/service/requests_service.dart';
 import 'package:love_book/core/service/user_service.dart';
 import 'package:love_book/core/viewmodels/auth_model.dart';
-import 'package:love_book/core/viewmodels/home_model.dart';
+import 'package:love_book/core/viewmodels/user_model.dart';
+import 'package:love_book/core/viewmodels/profile_model.dart';
 import 'package:love_book/core/viewmodels/requests_model.dart';
 import 'package:love_book/core/viewmodels/search_model.dart';
 import 'package:love_book/ui/views/search_view.dart';
@@ -19,6 +20,7 @@ void setupLocator() {
   
   locator.registerLazySingleton(() => AuthModel());
   locator.registerFactory(() => SearchModel());
-  locator.registerFactory(() => HomeModel());
+  locator.registerFactory(() => UserModel());
   locator.registerFactory(() => RequestsModel());
+  locator.registerFactory(() => ProfileModel());
 }

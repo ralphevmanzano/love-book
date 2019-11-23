@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:love_book/core/viewmodels/requests_model.dart';
+import 'package:love_book/core/viewmodels/user_model.dart';
 import 'package:love_book/locator.dart';
 import 'package:love_book/ui/routes/routes.dart';
 import 'package:love_book/ui/views/auth/login_view.dart';
@@ -21,22 +22,19 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
     return MultiProvider(
       providers: [
-        ChangeNotifierProvider.value(
-          value: locator<AuthModel>(),
-        ),
-        ChangeNotifierProvider.value(
-          value: locator<RequestsModel>(),
-        ),
+        ChangeNotifierProvider.value(value: locator<AuthModel>()),
+        ChangeNotifierProvider.value(value: locator<RequestsModel>()),
+        ChangeNotifierProvider.value(value: locator<UserModel>()),
       ],
       child: MaterialApp(
         title: 'Lovebook',
         theme: ThemeData(
           primaryColor: c.Colors.primaryColor,
           textTheme: TextTheme(
-            subtitle: TextStyle(fontFamily: 'Ubuntu'),
+            subtitle: TextStyle(
+                fontFamily: 'Ubuntu', fontSize: 12, color: Colors.grey),
             button: TextStyle(color: Colors.white, fontFamily: 'Ubuntu'),
             title: TextStyle(fontSize: 28, fontFamily: 'Ubuntu'),
           ),
