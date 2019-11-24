@@ -31,12 +31,13 @@ class MyApp extends StatelessWidget {
       child: MaterialApp(
         title: 'Lovebook',
         theme: ThemeData(
+          fontFamily: 'Ubuntu',
           primaryColor: c.Colors.primaryColor,
           textTheme: TextTheme(
-            subtitle: TextStyle(
-                fontFamily: 'Ubuntu', fontSize: 12, color: Colors.grey),
-            button: TextStyle(color: Colors.white, fontFamily: 'Ubuntu'),
-            title: TextStyle(fontSize: 28, fontFamily: 'Ubuntu'),
+            subtitle: TextStyle(fontSize: 12, color: Colors.grey),
+            button: TextStyle(color: Colors.white),
+            title: TextStyle(fontSize: 28),
+            display1: TextStyle(fontSize: 24, color: c.Colors.primaryColor),
           ),
           /*buttonTheme: ButtonThemeData(
               buttonColor: theme.primaryColor,

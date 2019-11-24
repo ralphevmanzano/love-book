@@ -5,7 +5,7 @@ class Request {
   String fromPhotoUrl;
   String toId;
   String fromName;
-  DateTime createdAt;
+  Timestamp createdAt;
 
   Request({
     this.fromId,

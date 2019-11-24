@@ -29,9 +29,11 @@ class UserService implements UserApi {
   }
 
   @override
-  Future<DocumentSnapshot> getUser(String uid) {
+  Stream<DocumentSnapshot> getUser(String uid) {
     try {
-      return ref.document(uid).get();
+      print('get user');
+      print(ref.document(uid).documentID);
+      return ref.document(uid).snapshots();
     } catch (e) {
       throw Exception(e);
     }

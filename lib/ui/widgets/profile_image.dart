@@ -1,16 +1,25 @@
 import 'dart:io';
+import 'dart:typed_data';
 
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:love_book/core/service/storage_service.dart';
+import 'package:love_book/core/viewmodels/auth_model.dart';
 import 'package:love_book/core/viewmodels/profile_model.dart';
+import 'package:love_book/locator.dart';
 import 'package:love_book/ui/views/base_view.dart';
+import 'package:love_book/ui/widgets/choose_photo_widget.dart';
+import 'package:love_book/utils/splash_effect.dart';
 import 'package:provider/provider.dart';
 
 class ProfileImage extends StatefulWidget {
   final double circleAvatarRadius;
+  final String photoUrl;
 
-  const ProfileImage({Key key, @required this.circleAvatarRadius})
+  const ProfileImage(
+      {Key key, @required this.photoUrl, @required this.circleAvatarRadius})
       : super(key: key);
 
   @override
@@ -18,13 +27,17 @@ class ProfileImage extends StatefulWidget {
 }
 
 class _ProfileImageState extends State<ProfileImage> {
+  final StorageService _storageService = locator<StorageService>();
+  final AuthModel _authModel = locator<AuthModel>();
   File _imageFile;
+  Uint8List _memImageFile;
 
-  Future<void> _pickImage(ImageSource source) async {
+  Future<void> _pickImage(ImageSource source, ThemeData theme) async {
     File selected = await ImagePicker.pickImage(source: source);
-    setState(() {
+    if (selected != null) {
       _imageFile = selected;
-    });
+      _cropImage(theme);
+    }
   }
 
   Future<void> _cropImage(ThemeData theme) async {
@@ -35,57 +48,125 @@ class _ProfileImageState extends State<ProfileImage> {
         toolbarColor: Colors.white,
       ),
     );
-
     setState(() {
       _imageFile = cropped ?? _imageFile;
     });
+    _storageService.uploadFile(_authModel.uid, cropped ?? _imageFile);
   }
 
   @override
   Widget build(BuildContext context) {
+    print('------------------------');
     final theme = Theme.of(context);
-    final model = Provider.of<ProfileModel>(context);
-
-    return _buildImageContainer(model, theme);
+    return _buildProfileImageContainer(theme);
   }
 
-  Widget _buildImageContainer(ProfileModel model, ThemeData theme) {
+  Widget _buildProfileImageContainer(ThemeData theme) {
+    return Stack(
+      alignment: Alignment.center,
+      children: <Widget>[
+        _buildCircleProgress(),
+        _buildCircleImageContainer(theme),
+      ],
+    );
+  }
+
+  Widget _buildCircleProgress() {
+    if (_storageService.uploadTask != null) {
+      return StreamBuilder<StorageTaskEvent>(
+        stream: _storageService.uploadTask.events,
+        builder: (context, taskEvent) {
+          return _buildCircleProgressContent(taskEvent);
+        },
+      );
+    } else {
+      return Container();
+    }
+  }
+
+  Widget _buildCircleProgressContent(
+      AsyncSnapshot<StorageTaskEvent> taskEvent) {
+    if (taskEvent.data != null) {
+      print(taskEvent.connectionState);
+
+      if (taskEvent.connectionState == ConnectionState.active) {
+        return Container();
+      }
+      else if (taskEvent.connectionState == ConnectionState.waiting) {
+        return SizedBox(
+          height: 2 * (widget.circleAvatarRadius + 8),
+          width: 2 * (widget.circleAvatarRadius + 8),
+          child: CircularProgressIndicator(
+            strokeWidth: 2,
+            valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+          ),
+        );
+      }
+    }
+    return Container();
+  }
+
+  Widget _buildCircleImageContainer(ThemeData theme) {
+    return Stack(children: <Widget>[
+      _buildCircleAvatarImage(),
+      _buildEditImageIcon(theme),
+    ]);
+  }
+
+  Widget _buildCircleAvatarImage() {
     return CircleAvatar(
       radius: widget.circleAvatarRadius,
-      backgroundColor: theme.primaryColor,
+      backgroundColor: Colors.white,
       child: CircleAvatar(
-        radius: widget.circleAvatarRadius - 4,
+        radius: widget.circleAvatarRadius - 2,
         backgroundImage: _renderImage(),
-        child: GestureDetector(
-          onTap: () {
-            if (model.isEditing) {
-              _pickImage(ImageSource.gallery);
-            }
-          },
-          child: _buildImageMask(model),
+      ),
+    );
+  }
+
+  Widget _buildEditImageIcon(ThemeData theme) {
+    return Positioned(
+      bottom: 0,
+      right: 0,
+      child: GestureDetector(
+        onTap: () {
+          _showBottomSheet(context);
+        },
+        child: CircleAvatar(
+          radius: 18,
+          backgroundColor: theme.primaryColor,
+          child: CircleAvatar(
+            radius: 16,
+            backgroundColor: Colors.white,
+            child: Icon(
+              Icons.camera_alt,
+              size: 18,
+              color: theme.primaryColor,
+            ),
+          ),
         ),
       ),
     );
   }
 
-  Widget _buildImageMask(ProfileModel model) {
-    return SizedBox.expand(
-      child: CircleAvatar(
-        backgroundColor: model.isEditing
-            ? Color.fromRGBO(83, 83, 83, 0.5)
-            : Colors.transparent,
-        child: model.isEditing
-            ? Icon(Icons.camera_alt, color: Colors.white, size: 32)
-            : Container(),
-      ),
+  void _showBottomSheet(BuildContext context) async {
+    final theme = Theme.of(context);
+    final imgSource = await showModalBottomSheet(
+      context: context,
+      builder: (context) => ChoosePhotoWidget(),
+      elevation: 6,
+      backgroundColor: Colors.transparent,
+      useRootNavigator: true,
     );
+    if (imgSource != null) _pickImage(imgSource, theme);
   }
 
   ImageProvider _renderImage() {
     if (_imageFile != null) {
+      print('Load image in file');
       return FileImage(_imageFile);
     }
-    return NetworkImage(
-        'https://scontent.fceb2-1.fna.fbcdn.net/v/t1.0-9/s960x960/41602575_2214526475242648_564062272641564672_o.jpg?_nc_cat=102&_nc_ohc=RpbPcFA3e9gAQl6cpA4Krkq7ASVIJzPqWspEcPt3HhDTbDV9yBWmQ8KWw&_nc_ht=scontent.fceb2-1.fna&oh=b4f51290ca5070138590e726d22bfcf9&oe=5E7DFB2F');
+    print('Load image in network');
+    return NetworkImage(widget.photoUrl);
   }
 }

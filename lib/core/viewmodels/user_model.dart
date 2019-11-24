@@ -7,19 +7,22 @@ import 'package:love_book/locator.dart';
 
 class UserModel extends BaseModel {
   final _userService = locator<UserService>();
-  
+
   User _user;
+
   User get user => _user;
-  
-  Future<void> getUser(String uid) async {
-    try {
-//      setState(ViewState.Busy);
-      DocumentSnapshot ds = await _userService.getUser(uid);
-      _user = User.fromMap(uid, ds.data);
-//      setState(ViewState.Idle);
-    } catch (e) {
-//      setState(ViewState.Idle);
-      print(e);
-    }
+
+  void getUser(String uid) {
+    _userService.getUser(uid).listen((ds) {
+      onUserChanged(uid, ds);
+    });
+  }
+
+  void onUserChanged(String uid, DocumentSnapshot ds) {
+    if (ds.data == null) return;
+
+    print('User changed!');
+    _user = User.fromMap(uid, ds.data);
+    notifyListeners();
   }
 }

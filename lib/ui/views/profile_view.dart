@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:love_book/core/models/user.dart';
 import 'package:love_book/core/viewmodels/user_model.dart';
+import 'package:love_book/ui/widgets/profile_image.dart';
+import 'package:love_book/utils/styles.dart';
 import 'package:provider/provider.dart';
 
 class ProfileView extends StatelessWidget {
@@ -8,7 +10,8 @@ class ProfileView extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final model = Provider.of<UserModel>(context);
-
+    print('Ni build ang profile view!!');
+    
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.white,
@@ -46,13 +49,9 @@ class ProfileView extends StatelessWidget {
           child: _buildProfileHeader(user: user, width: width, theme: theme),
         ),
         Container(
+          width: double.infinity,
           height: listHeight,
-          child: ListView.builder(
-            itemCount: 20,
-            itemBuilder: (ctx, i) => ListTile(
-              title: Text('Title $i'),
-            ),
-          ),
+          child: _buildProfileList(user, theme),
         )
       ],
     );
@@ -62,32 +61,116 @@ class ProfileView extends StatelessWidget {
     return NetworkImage(imgUrl);
   }
 
+  Widget _buildProfileList(User user, ThemeData theme) {
+    return SingleChildScrollView(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          ..._buildProfileItem(user, theme),
+          ..._buildRelationshipItem(user, theme)
+        ],
+      ),
+    );
+  }
+
   Widget _buildProfileHeader({double width, ThemeData theme, User user}) {
     return Container(
       margin: EdgeInsets.all(16),
       padding: EdgeInsets.all(32),
       decoration: BoxDecoration(
+        gradient: LinearGradient(
+//          stops: [],
+            begin: Alignment.bottomLeft,
+            end: Alignment.topRight,
+            stops: [
+              0.3,
+              0.6,
+              0.8
+            ],
+            colors: [
+              const Color(0xff380e7f),
+              const Color(0xff6915cf),
+              theme.primaryColor,
+            ]),
         borderRadius: BorderRadius.all(Radius.circular(16)),
-        color: theme.primaryColor,
         boxShadow: [BoxShadow(color: Colors.black54, blurRadius: 5)],
       ),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: <Widget>[
-          CircleAvatar(
-            backgroundImage: _renderImage(user.photoUrl),
-            radius: width / 9,
+          ProfileImage(
+            photoUrl: user.photoUrl,
+            circleAvatarRadius: width / 9,
           ),
           Text(
             user.name,
             style: TextStyle(
               color: Colors.white,
-              fontFamily: 'Ubuntu',
               fontSize: 16,
             ),
           )
         ],
       ),
+    );
+  }
+
+  List<Widget> _buildProfileItem(User user, ThemeData theme) {
+    return [
+      _buildProfileItemHeader('Profile'),
+      _buildProfileItemValue(label: 'Email', value: user.email),
+      _buildProfileItemValue(
+        label: 'Birthday',
+        value: 'August 23, 1996',
+        isLargeDivider: true,
+      ),
+    ];
+  }
+
+  List<Widget> _buildRelationshipItem(User user, ThemeData theme) {
+    return [
+      _buildProfileItemHeader('Relationship'),
+      _buildProfileItemValue(label: 'Partner', value: 'Julie Anne Acena'),
+      _buildProfileItemValue(label: 'Anniversary', value: 'November 28, 2014'),
+    ];
+  }
+
+  Widget _buildProfileItemHeader(String header) {
+    return Container(
+      margin: EdgeInsets.fromLTRB(16, 12, 16, 4),
+      child: Text(header, style: Styles.profileItemHeader),
+    );
+  }
+
+  Widget _buildProfileItemValue(
+      {String label, String value, bool isLargeDivider = false}) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: <Widget>[
+        InkWell(
+          onTap: () {},
+          child: Container(
+            width: double.infinity,
+            padding: EdgeInsets.symmetric(vertical: 8),
+            margin: EdgeInsets.fromLTRB(16, 0, 16, 4),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                Text(value, style: Styles.profileItemValue),
+                SizedBox(height: 4),
+                Text(label, style: Styles.profileItemLabel),
+              ],
+            ),
+          ),
+        ),
+        Container(
+          padding: isLargeDivider
+              ? EdgeInsets.fromLTRB(16, 0, 0, 0)
+              : EdgeInsets.zero,
+          width: double.infinity,
+          height: isLargeDivider ? 8 : 1,
+          color: Colors.black12,
+        ),
+      ],
     );
   }
 }

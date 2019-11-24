@@ -17,7 +17,6 @@ class RequestsModel extends BaseModel {
   }
 
   void _onRequestsChanged(DocumentSnapshot snapshot) {
-    print('0000000000000000000000000');
     print(snapshot.data);
     if (snapshot.data == null)
       request = null;

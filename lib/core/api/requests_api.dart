@@ -4,4 +4,6 @@ abstract class RequestsApi {
   Future<DocumentReference> addRequest(Map<String, dynamic> request);
   
   Future<void> removeRequest(String requestId);
+  
+  Stream<DocumentSnapshot> fetchRequests(String uid);
 }

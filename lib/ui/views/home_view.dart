@@ -1,12 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:love_book/core/models/user.dart';
 import 'package:love_book/core/viewmodels/auth_model.dart';
 import 'package:love_book/core/viewmodels/user_model.dart';
-import 'package:love_book/core/viewmodels/requests_model.dart';
-import 'package:love_book/core/viewstate.dart';
 import 'package:love_book/ui/routes/routes.dart';
-import 'package:love_book/ui/views/base_view.dart';
 import 'package:love_book/ui/widgets/home_drawer.dart';
 import 'package:love_book/utils/splash_effect.dart';
 import 'package:provider/provider.dart';
@@ -18,19 +14,6 @@ class HomeView extends StatefulWidget {
 
 class _HomeViewState extends State<HomeView> {
   var _isInit = true;
-  ViewState _viewState = ViewState.Idle;
-
-  void _loadState() {
-    setState(() {
-      _viewState = ViewState.Busy;
-    });
-  }
-
-  void _idleState() {
-    setState(() {
-      _viewState = ViewState.Idle;
-    });
-  }
 
   @override
   void didChangeDependencies() {
@@ -40,12 +23,8 @@ class _HomeViewState extends State<HomeView> {
 
     if (_isInit) {
       _isInit = false;
-
-      _loadState();
-
-      model.getUser(uid).then((_) {
-        _idleState();
-      });
+      
+      model.getUser(uid);
     }
   }
 
@@ -68,7 +47,7 @@ class _HomeViewState extends State<HomeView> {
   }
 
   Widget _buildBody(UserModel model, double width, ThemeData theme) {
-    if (_viewState == ViewState.Idle && model.user != null) {
+    if (model.user != null) {
       return _buildBodyContent(model, width, theme);
     } else {
       return Row(
@@ -89,6 +68,7 @@ class _HomeViewState extends State<HomeView> {
               children: <Widget>[
                 SizedBox(height: 36),
                 SplashEffect(
+                  radius: 16,
                   onTap: () {
                     Routes.sailor(Routes.SEARCH_VIEW);
                   },
