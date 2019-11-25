@@ -1,25 +1,20 @@
 import 'dart:io';
-import 'dart:typed_data';
 
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:love_book/core/service/storage_service.dart';
-import 'package:love_book/core/viewmodels/auth_model.dart';
-import 'package:love_book/core/viewmodels/profile_model.dart';
 import 'package:love_book/locator.dart';
-import 'package:love_book/ui/views/base_view.dart';
 import 'package:love_book/ui/widgets/choose_photo_widget.dart';
-import 'package:love_book/utils/splash_effect.dart';
-import 'package:provider/provider.dart';
 
 class ProfileImage extends StatefulWidget {
   final double circleAvatarRadius;
   final String photoUrl;
+  final String userId;
 
   const ProfileImage(
-      {Key key, @required this.photoUrl, @required this.circleAvatarRadius})
+      {Key key, @required this.userId, @required this.photoUrl, @required this.circleAvatarRadius})
       : super(key: key);
 
   @override
@@ -28,9 +23,8 @@ class ProfileImage extends StatefulWidget {
 
 class _ProfileImageState extends State<ProfileImage> {
   final StorageService _storageService = locator<StorageService>();
-  final AuthModel _authModel = locator<AuthModel>();
+
   File _imageFile;
-  Uint8List _memImageFile;
 
   Future<void> _pickImage(ImageSource source, ThemeData theme) async {
     File selected = await ImagePicker.pickImage(source: source);
@@ -51,7 +45,7 @@ class _ProfileImageState extends State<ProfileImage> {
     setState(() {
       _imageFile = cropped ?? _imageFile;
     });
-    _storageService.uploadFile(_authModel.uid, cropped ?? _imageFile);
+    _storageService.uploadFile(widget.userId, cropped ?? _imageFile);
   }
 
   @override

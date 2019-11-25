@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:love_book/core/models/user.dart';
+import 'package:love_book/core/service/auth_service.dart';
 import 'package:love_book/core/service/user_service.dart';
 import 'package:love_book/core/viewmodels/base_model.dart';
 import 'package:love_book/core/viewstate.dart';
@@ -7,22 +8,12 @@ import 'package:love_book/locator.dart';
 
 class UserModel extends BaseModel {
   final _userService = locator<UserService>();
+  final _authService = locator<AuthService>();
 
-  User _user;
+  Stream<User> get user => _userService.user;
 
-  User get user => _user;
-
-  void getUser(String uid) {
-    _userService.getUser(uid).listen((ds) {
-      onUserChanged(uid, ds);
-    });
+  void getUser() {
+    _userService.getUser(_authService.uid);
   }
 
-  void onUserChanged(String uid, DocumentSnapshot ds) {
-    if (ds.data == null) return;
-
-    print('User changed!');
-    _user = User.fromMap(uid, ds.data);
-    notifyListeners();
-  }
 }

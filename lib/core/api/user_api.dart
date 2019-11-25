@@ -3,7 +3,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 abstract class UserApi {
   Future<DocumentReference> addUser(String uid, Map<String, dynamic> user);
   
-  Stream<DocumentSnapshot> getUser(String uid);
+  void getUser(String uid);
   
   Future<QuerySnapshot> getUsers(String query);
   

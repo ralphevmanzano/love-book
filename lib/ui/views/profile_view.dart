@@ -9,7 +9,6 @@ class ProfileView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final model = Provider.of<UserModel>(context);
     print('Ni build ang profile view!!');
     
     return Scaffold(
@@ -21,9 +20,14 @@ class ProfileView extends StatelessWidget {
           // TODO: route to edit view
         ],
       ),
-      body: _buildBody(
-        context: context,
-        user: model.user,
+      body: StreamBuilder<User>(
+        stream: Provider.of<UserModel>(context).user,
+        builder: (context, snapshot) {
+          return _buildBody(
+            context: context,
+            user: snapshot.data,
+          );
+        }
       ),
     );
   }
@@ -55,10 +59,6 @@ class ProfileView extends StatelessWidget {
         )
       ],
     );
-  }
-
-  ImageProvider _renderImage(String imgUrl) {
-    return NetworkImage(imgUrl);
   }
 
   Widget _buildProfileList(User user, ThemeData theme) {
@@ -99,6 +99,7 @@ class ProfileView extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: <Widget>[
           ProfileImage(
+            userId: user.userId,
             photoUrl: user.photoUrl,
             circleAvatarRadius: width / 9,
           ),

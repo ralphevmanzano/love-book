@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:love_book/core/viewmodels/auth_model.dart';
+import 'package:love_book/core/models/user.dart';
 import 'package:love_book/core/viewmodels/user_model.dart';
 import 'package:love_book/ui/routes/routes.dart';
 import 'package:love_book/ui/widgets/home_drawer.dart';
@@ -18,13 +18,12 @@ class _HomeViewState extends State<HomeView> {
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    final uid = Provider.of<AuthModel>(context, listen: false).uid;
     final model = Provider.of<UserModel>(context, listen: false);
 
     if (_isInit) {
       _isInit = false;
       
-      model.getUser(uid);
+      model.getUser();
     }
   }
 
@@ -33,22 +32,23 @@ class _HomeViewState extends State<HomeView> {
     final theme = Theme.of(context);
     final width = MediaQuery.of(context).size.width;
 
-    return Consumer<UserModel>(
-      builder: (ctx, model, child) => Scaffold(
+    return StreamBuilder<User>(
+      stream: Provider.of<UserModel>(context).user,
+      builder: (ctx, snapshot) => Scaffold(
         appBar: AppBar(
           backgroundColor: Colors.white,
           elevation: 0,
           iconTheme: IconThemeData(color: theme.primaryColor),
         ),
         drawer: HomeDrawer(),
-        body: _buildBody(model, width, theme),
+        body: _buildBody(snapshot.data, width, theme),
       ),
     );
   }
 
-  Widget _buildBody(UserModel model, double width, ThemeData theme) {
-    if (model.user != null) {
-      return _buildBodyContent(model, width, theme);
+  Widget _buildBody(User user, double width, ThemeData theme) {
+    if (user != null) {
+      return _buildBodyContent(user, width, theme);
     } else {
       return Row(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -59,10 +59,10 @@ class _HomeViewState extends State<HomeView> {
     }
   }
 
-  Widget _buildBodyContent(UserModel model, double width, ThemeData theme) {
+  Widget _buildBodyContent(User user, double width, ThemeData theme) {
     return Container(
       width: width,
-      child: (model.user.hasNoPartner())
+      child: (user.hasNoPartner())
           ? Column(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: <Widget>[
