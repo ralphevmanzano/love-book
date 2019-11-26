@@ -4,6 +4,7 @@ import 'package:love_book/core/models/alert/alert_response.dart';
 import 'package:love_book/core/service/dialog_service.dart';
 import 'package:love_book/locator.dart';
 import 'package:love_book/ui/routes/routes.dart';
+import 'package:love_book/utils/styles.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
 
 class DialogManager extends StatefulWidget {
@@ -30,31 +31,30 @@ class _DialogManagerState extends State<DialogManager> {
   }
 
   void _showDialog(AlertRequest request) {
-    
-    Alert(
-        context: context,
-        title: request.title,
-        desc: request.description,
-        closeFunction: () =>
-            _dialogService.dialogComplete(AlertResponse(confirmed: false)),
-        buttons: [
-          DialogButton(
-            child: Text(request.posButtonTitle),
-            onPressed: () {
-              _dialogService.dialogComplete(AlertResponse(confirmed: true));
-              Routes.sailor.pop();
-            },
-          ),
-          request.negButtonTitle != null
-              ? DialogButton(
-                  child: Text(request.negButtonTitle),
-                  onPressed: () {
-                    _dialogService
-                        .dialogComplete(AlertResponse(confirmed: false));
-                    Routes.sailor.pop();
-                  },
-                )
-              : Container()
-        ]).show();
+    AlertDialog alert = AlertDialog(
+      title: Text(request.title, style: Styles.profileItemHeader),
+      content: Text(request.description),
+      actions: <Widget>[
+        _buildDialogButton(title: request.negButtonTitle, isPositive: false),
+        _buildDialogButton(title: request.posButtonTitle, isPositive: true),
+      ],
+    );
+
+    showDialog(context: context, builder: (context) => alert);
+  }
+  
+  Widget _buildDialogButton({String title, bool isPositive}) {
+    final theme = Theme.of(context);
+  
+    return FlatButton(
+      child: Text(
+        title,
+        style: TextStyle(color: isPositive ? theme.primaryColor : Colors.red[400]),
+      ),
+      onPressed: () {
+        Routes.sailor.pop();
+        _dialogService.dialogComplete(AlertResponse(confirmed: isPositive));
+      },
+    );
   }
 }

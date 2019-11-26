@@ -11,32 +11,15 @@ enum AuthState { Authenticated, Unauthenticated, Loading }
 class AuthModel extends BaseModel {
   final AuthService _authService = locator<AuthService>();
   final UserService _userService = locator<UserService>();
-
-  AuthState _authState = AuthState.Loading;
-
-  AuthState get authState => _authState;
-
-  AuthModel() {
-    _checkIfUserIsLoggedIn();
-  }
-
-  Future<void> _checkIfUserIsLoggedIn() async {
-    _listenToAuthChanges();
-  }
-
-  void _listenToAuthChanges() {
-    _authService.auth.onAuthStateChanged.listen((user) {
-      _authState =
-          user != null ? AuthState.Authenticated : AuthState.Unauthenticated;
-      setState(ViewState.Idle);
-    });
-  }
-
+  
+  Stream<AuthState> get authState => _authService.authState;
+  
   Future<void> register(String name, String email, String password) async {
     try {
       setState(ViewState.Busy);
       User user = await _authService.register(name, email, password);
       await _userService.addUser(user.userId, user.toJson());
+      setState(ViewState.Idle);
     } catch (e) {
       setState(ViewState.Idle);
       print(e);
@@ -47,6 +30,7 @@ class AuthModel extends BaseModel {
     try {
       setState(ViewState.Busy);
       await _authService.loginEmailPassword(email, password);
+      setState(ViewState.Idle);
     } catch (e) {
       setState(ViewState.Idle);
       print(e);
@@ -57,6 +41,7 @@ class AuthModel extends BaseModel {
     try {
       setState(ViewState.Busy);
       await _authService.signOut();
+      setState(ViewState.Idle);
     } catch (e) {
       setState(ViewState.Idle);
     }

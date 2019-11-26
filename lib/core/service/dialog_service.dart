@@ -20,7 +20,7 @@ class DialogService {
       description: alertRequest.description,
       posButtonTitle: alertRequest.posButtonTitle,
       negButtonTitle: alertRequest.negButtonTitle,
-      imageUrl: alertRequest.imageUrl,
+      photoUrl: alertRequest.photoUrl,
     ));
     return _dialogCompleter.future;
   }

@@ -60,6 +60,7 @@ flutter:
   assets:
    - assets/images/img_empty.svg
    - assets/images/img_love.svg
+   - assets/images/img_searching.svg
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.

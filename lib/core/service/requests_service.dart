@@ -6,18 +6,14 @@ import 'package:love_book/core/models/request.dart';
 
 class RequestsService implements RequestsApi {
   final Firestore _db = Firestore.instance;
-  
+
   Stream<DocumentSnapshot> fetchRequests(String uid) {
-    return _db
-        .collection('requests')
-        .document(uid)
-        .snapshots();
+    return _db.collection('requests').document(uid).snapshots();
   }
 
   @override
-  Future<DocumentReference> addRequest(Map<String, dynamic> request) {
-    // TODO: implement addRequest
-    return null;
+  Future<void> addRequest(String uid, Request request) {
+    return _db.collection('requests').document(uid).setData(request.toJson());
   }
 
   @override
@@ -25,17 +21,4 @@ class RequestsService implements RequestsApi {
     // TODO: implement removeRequest
     return null;
   }
-
-  /*void _onRequestsUpdated(QuerySnapshot snapshot) {
-    snapshot.documentChanges.forEach((change) {
-      if (change.document.data.containsKey('request')) {
-        requestController.add(Request.fromMap(change.document.data));
-      } else {
-        requestController.add(null);
-      }
-      print(change.document.data.keys);
-      print('docuChanges ${change.document.data}');
-    });
-//    _requestController.add(Request.fromSnapshot(snapshot));
-  }*/
 }

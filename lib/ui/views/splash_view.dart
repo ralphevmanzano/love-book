@@ -8,22 +8,22 @@ class SplashView extends StatelessWidget {
         child: Container(
           width: double.infinity,
           decoration: BoxDecoration(color: Theme.of(context).primaryColor),
-          child: Center(
-            child: Column(
-              children: <Widget>[
-                Text(
-                  'Lovebook',
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontFamily: 'Ubuntu',
-                    fontSize: 28,
-                  ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              Text(
+                'Lovebook',
+                style: TextStyle(
+                  color: Colors.white,
+                  fontFamily: 'Ubuntu',
+                  fontSize: 28,
                 ),
-                CircularProgressIndicator(
-                  valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
-                ),
-              ],
-            ),
+              ),
+              CircularProgressIndicator(
+                valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+              ),
+            ],
           ),
         ),
       ),

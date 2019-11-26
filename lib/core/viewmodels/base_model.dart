@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:love_book/core/models/alert/alert_request.dart';
+import 'package:love_book/core/models/alert/alert_response.dart';
 import 'package:love_book/core/service/dialog_service.dart';
 import 'package:love_book/locator.dart';
 
@@ -17,14 +18,7 @@ class BaseModel extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future showAlert(AlertRequest alertRequest, Function onCompleted, Function onCanceled) async {
-    var dialogResult = await _dialogService.showDialog(alertRequest);
-    if (dialogResult.confirmed) {
-      print('user has confirmed');
-      onCompleted();
-    } else {
-      print('user cancelled');
-      onCanceled();
-    }
+  Future<AlertResponse> showAlert(AlertRequest alertRequest) async {
+    return await _dialogService.showDialog(alertRequest);
   }
 }

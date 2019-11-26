@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:love_book/core/viewmodels/requests_model.dart';
-import 'package:love_book/core/viewmodels/user_model.dart';
+import 'package:love_book/core/viewmodels/profile_model.dart';
+import 'package:love_book/core/viewmodels/home_model.dart';
 import 'package:love_book/locator.dart';
 import 'package:love_book/ui/routes/routes.dart';
 import 'package:love_book/ui/views/auth/login_view.dart';
@@ -25,12 +25,13 @@ class MyApp extends StatelessWidget {
     return MultiProvider(
       providers: [
         ChangeNotifierProvider.value(value: locator<AuthModel>()),
-        ChangeNotifierProvider.value(value: locator<RequestsModel>()),
-        ChangeNotifierProvider.value(value: locator<UserModel>()),
+        ChangeNotifierProvider.value(value: locator<HomeModel>()),
+        ChangeNotifierProvider.value(value: locator<ProfileModel>()),
       ],
       child: MaterialApp(
         title: 'Lovebook',
         theme: ThemeData(
+          backgroundColor: Colors.white,
           fontFamily: 'Ubuntu',
           primaryColor: c.Colors.primaryColor,
           textTheme: TextTheme(
@@ -47,9 +48,10 @@ class MyApp extends StatelessWidget {
         onGenerateRoute: Routes.sailor.generator(),
         navigatorKey: Routes.sailor.navigatorKey,
         home: DialogManager(
-          child: Consumer<AuthModel>(
-            builder: (ctx, model, child) {
-              switch (model.authState) {
+          child: StreamBuilder<AuthState>(
+            stream: locator<AuthModel>().authState,
+            builder: (ctx, snapshot) {
+              switch (snapshot.data) {
                 case AuthState.Loading:
                   return SplashView();
                 case AuthState.Unauthenticated:

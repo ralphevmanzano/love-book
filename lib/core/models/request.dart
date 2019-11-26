@@ -12,8 +12,9 @@ class Request {
     this.fromPhotoUrl,
     this.toId,
     this.fromName,
-    this.createdAt,
-  });
+  }) {
+    this.createdAt = Timestamp.now();
+  }
 
   toJson() {
     return {

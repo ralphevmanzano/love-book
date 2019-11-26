@@ -14,7 +14,10 @@ class ProfileImage extends StatefulWidget {
   final String userId;
 
   const ProfileImage(
-      {Key key, @required this.userId, @required this.photoUrl, @required this.circleAvatarRadius})
+      {Key key,
+      @required this.userId,
+      @required this.photoUrl,
+      @required this.circleAvatarRadius})
       : super(key: key);
 
   @override
@@ -85,8 +88,7 @@ class _ProfileImageState extends State<ProfileImage> {
 
       if (taskEvent.connectionState == ConnectionState.active) {
         return Container();
-      }
-      else if (taskEvent.connectionState == ConnectionState.waiting) {
+      } else if (taskEvent.connectionState == ConnectionState.waiting) {
         return SizedBox(
           height: 2 * (widget.circleAvatarRadius + 8),
           width: 2 * (widget.circleAvatarRadius + 8),
@@ -159,8 +161,9 @@ class _ProfileImageState extends State<ProfileImage> {
     if (_imageFile != null) {
       print('Load image in file');
       return FileImage(_imageFile);
+    } else if (widget.photoUrl.isNotEmpty) {
+      return NetworkImage(widget.photoUrl);
     }
-    print('Load image in network');
-    return NetworkImage(widget.photoUrl);
+    return null;
   }
 }

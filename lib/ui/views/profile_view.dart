@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:love_book/core/models/user.dart';
-import 'package:love_book/core/viewmodels/user_model.dart';
+import 'package:love_book/core/viewmodels/profile_model.dart';
 import 'package:love_book/ui/widgets/profile_image.dart';
 import 'package:love_book/utils/styles.dart';
 import 'package:provider/provider.dart';
@@ -9,9 +9,11 @@ class ProfileView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final model = Provider.of<ProfileModel>(context);
     print('Ni build ang profile view!!');
-    
+
     return Scaffold(
+      backgroundColor: Colors.white,
       appBar: AppBar(
         backgroundColor: Colors.white,
         elevation: 0,
@@ -20,15 +22,12 @@ class ProfileView extends StatelessWidget {
           // TODO: route to edit view
         ],
       ),
-      body: StreamBuilder<User>(
-        stream: Provider.of<UserModel>(context).user,
-        builder: (context, snapshot) {
-          return _buildBody(
-            context: context,
-            user: snapshot.data,
-          );
-        }
-      ),
+      body: Consumer<ProfileModel>(builder: (context, model, child) {
+        return _buildBody(
+          context: context,
+          user: model.user,
+        );
+      }),
     );
   }
 
@@ -37,14 +36,8 @@ class ProfileView extends StatelessWidget {
     User user,
   }) {
     ThemeData theme = Theme.of(context);
-    double height = MediaQuery.of(context).size.height;
     double width = MediaQuery.of(context).size.width;
-    double statusBarHeight = MediaQuery.of(context).padding.top;
     double aspectRatio = 16 / 9;
-    double listHeight = height -
-        width / aspectRatio -
-        statusBarHeight -
-        AppBar().preferredSize.height;
 
     return Column(
       children: <Widget>[
@@ -52,10 +45,12 @@ class ProfileView extends StatelessWidget {
           aspectRatio: aspectRatio,
           child: _buildProfileHeader(user: user, width: width, theme: theme),
         ),
-        Container(
-          width: double.infinity,
-          height: listHeight,
-          child: _buildProfileList(user, theme),
+        Expanded(
+          child: Container(
+            width: double.infinity,
+//            height: listHeight,
+            child: _buildProfileList(user, theme),
+          ),
         )
       ],
     );
@@ -78,20 +73,7 @@ class ProfileView extends StatelessWidget {
       margin: EdgeInsets.all(16),
       padding: EdgeInsets.all(32),
       decoration: BoxDecoration(
-        gradient: LinearGradient(
-//          stops: [],
-            begin: Alignment.bottomLeft,
-            end: Alignment.topRight,
-            stops: [
-              0.3,
-              0.6,
-              0.8
-            ],
-            colors: [
-              const Color(0xff380e7f),
-              const Color(0xff6915cf),
-              theme.primaryColor,
-            ]),
+        gradient: _generateGradient(theme),
         borderRadius: BorderRadius.all(Radius.circular(16)),
         boxShadow: [BoxShadow(color: Colors.black54, blurRadius: 5)],
       ),
@@ -113,6 +95,23 @@ class ProfileView extends StatelessWidget {
         ],
       ),
     );
+  }
+
+  LinearGradient _generateGradient(ThemeData theme) {
+    return LinearGradient(
+//          stops: [],
+          begin: Alignment.bottomLeft,
+          end: Alignment.topRight,
+          stops: [
+            0.3,
+            0.6,
+            0.8
+          ],
+          colors: [
+            const Color(0xff380e7f),
+            const Color(0xff6915cf),
+            theme.primaryColor,
+          ]);
   }
 
   List<Widget> _buildProfileItem(User user, ThemeData theme) {
