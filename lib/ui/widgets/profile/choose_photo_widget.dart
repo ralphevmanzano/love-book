@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:love_book/ui/routes/routes.dart';
-import 'package:love_book/ui/widgets/bottom_sheet_item.dart';
+import 'package:love_book/ui/widgets/profile/bottom_sheet_item.dart';
 import 'package:love_book/utils/styles.dart';
 
 class ChoosePhotoWidget extends StatelessWidget {

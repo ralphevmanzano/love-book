@@ -3,8 +3,8 @@ import 'package:love_book/core/models/user.dart';
 import 'package:love_book/core/viewmodels/home_model.dart';
 import 'package:love_book/ui/routes/routes.dart';
 import 'package:love_book/ui/views/base_view.dart';
-import 'package:love_book/ui/widgets/home_drawer.dart';
-import 'package:love_book/ui/widgets/image_notice.dart';
+import 'package:love_book/ui/widgets/home/home_drawer.dart';
+import 'package:love_book/ui/widgets/home/image_notice.dart';
 import 'package:provider/provider.dart';
 
 class HomeView extends StatefulWidget {

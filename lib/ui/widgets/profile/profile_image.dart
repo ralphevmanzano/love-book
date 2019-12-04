@@ -6,7 +6,7 @@ import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:love_book/core/service/storage_service.dart';
 import 'package:love_book/locator.dart';
-import 'package:love_book/ui/widgets/choose_photo_widget.dart';
+import 'package:love_book/ui/widgets/profile/choose_photo_widget.dart';
 
 class ProfileImage extends StatefulWidget {
   final double circleAvatarRadius;

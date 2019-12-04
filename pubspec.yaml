@@ -27,7 +27,7 @@ dependencies:
   rflutter_alert: ^1.0.3
   rxdart: ^0.22.6
   flutter_svg: ^0.15.0
-
+  jiffy: ^2.1.2
   firebase_core: ^0.4.2
   firebase_auth: ^0.14.0+9
   firebase_storage: ^3.0.8

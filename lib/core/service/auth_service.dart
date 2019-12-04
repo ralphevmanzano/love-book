@@ -31,16 +31,17 @@ class AuthService implements AuthApi {
   }
   
   @override
-  Future<User> register(String name, String email, String password) async {
+  Future<User> register(User user, String password) async {
     AuthResult result = await _auth.createUserWithEmailAndPassword(
-        email: email, password: password);
+        email: user.email, password: password);
 
     FirebaseUser fbUser = result.user;
     _uid = fbUser.uid;
 
-    User user = User.fromFirebaseUser(fbUser);
-    user.name = name;
-    return user;
+    User userRegistered = User.fromFirebaseUser(fbUser);
+    userRegistered.name = user.name;
+    userRegistered.birthday = user.birthday;
+    return userRegistered;
   }
 
   @override

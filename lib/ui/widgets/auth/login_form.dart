@@ -21,7 +21,8 @@ class _LoginFormState extends State<LoginForm> {
     super.dispose();
   }
 
-  String _validateEmail(String value) {
+  String _validateEmail(String val) {
+    String value = val.trim();
     if (value.isEmpty) {
       return 'This field is required';
     } else if (!validator.email(value)) {
@@ -30,7 +31,8 @@ class _LoginFormState extends State<LoginForm> {
     return null;
   }
 
-  String _validatePassword(String value) {
+  String _validatePassword(String val) {
+    String value = val.trim();
     if (value.isEmpty) {
       return 'This field is required';
     } else if (value.length < 8) {
@@ -59,7 +61,7 @@ class _LoginFormState extends State<LoginForm> {
   }
 
   void _saveEmail(String email) {
-    _currentUser['email'] = email;
+    _currentUser['email'] = email.trim();
   }
 
   void _savePassword(String password) {

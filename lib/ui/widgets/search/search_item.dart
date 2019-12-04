@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:love_book/ui/widgets/love_book_outlined_button.dart';
+import 'package:love_book/ui/widgets/common/love_book_outlined_button.dart';
 import 'package:love_book/utils/styles.dart';
 
 class SearchItem extends StatelessWidget {

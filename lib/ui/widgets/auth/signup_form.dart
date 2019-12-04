@@ -1,4 +1,7 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:jiffy/jiffy.dart';
+import 'package:love_book/core/models/user.dart';
 import 'package:love_book/core/viewmodels/auth_model.dart';
 import 'package:love_book/core/viewstate.dart';
 import 'package:love_book/ui/routes/routes.dart';
@@ -11,12 +14,17 @@ class SignupForm extends StatefulWidget {
 }
 
 class _SignupFormState extends State<SignupForm> {
+  DateTime _selectedDate = DateTime.now();
+
   final _pwController = TextEditingController();
+  final _bdayController = TextEditingController();
   final _emailFocusNode = FocusNode();
+  final _bdayFocusNode = FocusNode();
   final _pwFocusNode = FocusNode();
   final _confirmPwFocusNode = FocusNode();
   final _form = GlobalKey<FormState>();
-  var _currentUser = {'name': '', 'email': '', 'password': ''};
+  User _currentUser = User();
+  String _currentPassword = '';
 
   @override
   void initState() {
@@ -30,7 +38,21 @@ class _SignupFormState extends State<SignupForm> {
     _pwFocusNode.dispose();
     _emailFocusNode.dispose();
     _confirmPwFocusNode.dispose();
+    _bdayFocusNode.dispose();
     super.dispose();
+  }
+
+  Future<void> _selectDate(BuildContext context) async {
+    final DateTime picked = await showDatePicker(
+      context: context,
+      initialDate: _selectedDate,
+      firstDate: DateTime(1901, 1),
+      lastDate: _selectedDate,
+    );
+    if (picked != null && picked != _selectedDate) {
+      _selectedDate = picked;
+      _bdayController.text = Jiffy(picked).yMMMMd;
+    }
   }
 
   void _updateCurrentPassword() {
@@ -39,7 +61,8 @@ class _SignupFormState extends State<SignupForm> {
     }
   }
 
-  String _validateName(String value) {
+  String _validateName(String val) {
+    String value = val.trim();
     if (value.isEmpty) {
       return 'This field is required';
     } else if (value.length < 3) {
@@ -48,7 +71,9 @@ class _SignupFormState extends State<SignupForm> {
     return null;
   }
 
-  String _validateEmail(String value) {
+  String _validateEmail(String val) {
+    String value = val.trim();
+    print(value);
     if (value.isEmpty) {
       return 'This field is required';
     } else if (!validator.email(value)) {
@@ -57,7 +82,15 @@ class _SignupFormState extends State<SignupForm> {
     return null;
   }
 
-  String _validatePassword(String value) {
+  String _validateBirthday(String val) {
+    if (val.isEmpty) {
+      return 'This field is required';
+    }
+    return null;
+  }
+
+  String _validatePassword(String val) {
+    String value = val.trim();
     if (value.isEmpty) {
       return 'This field is required';
     } else if (value.length < 8) {
@@ -66,8 +99,8 @@ class _SignupFormState extends State<SignupForm> {
     return null;
   }
 
-  String _validateConfirmPassword(String value) {
-//    if (_confirmPwFocusNode.hasFocus) {
+  String _validateConfirmPassword(String val) {
+    String value = val.trim();
     if (value.isEmpty) {
       return 'This field is required';
     } else if (value != _pwController.text) {
@@ -78,15 +111,19 @@ class _SignupFormState extends State<SignupForm> {
   }
 
   void _saveName(String name) {
-    _currentUser['name'] = name;
+    _currentUser.name = name.trim();
   }
 
   void _saveEmail(String email) {
-    _currentUser['email'] = email;
+    _currentUser.email = email.trim();
+  }
+
+  void _saveBday(String bday) {
+    _currentUser.birthday = Timestamp.fromDate(_selectedDate);
   }
 
   void _savePassword(String password) {
-    _currentUser['password'] = password;
+    _currentPassword = password;
   }
 
   void _submitForm(AuthModel model) async {
@@ -96,10 +133,8 @@ class _SignupFormState extends State<SignupForm> {
 
     _form.currentState.save();
 
-    print(
-        'name: ${_currentUser['name']}\temail: ${_currentUser['email']}\tpw: ${_currentUser['password']}');
-    await model.register(
-        _currentUser['name'], _currentUser['email'], _currentUser['password']);
+    print('${_currentUser.toString()} \t password: $_currentPassword');
+    await model.register(_currentUser, _currentPassword);
     Routes.sailor.pop();
   }
 
@@ -133,11 +168,24 @@ class _SignupFormState extends State<SignupForm> {
                 textInputAction: TextInputAction.next,
                 focusNode: _emailFocusNode,
                 onFieldSubmitted: (_) {
-                  _focusOnNode(_pwFocusNode);
+                  _focusOnNode(_bdayFocusNode);
                 },
                 autocorrect: false,
                 validator: _validateEmail,
                 onSaved: _saveEmail,
+              ),
+              TextFormField(
+                controller: _bdayController,
+                decoration: InputDecoration(labelText: 'Birthday'),
+                textInputAction: TextInputAction.next,
+                focusNode: _bdayFocusNode,
+                onTap: () => _selectDate(context),
+                onFieldSubmitted: (_) {
+                  _focusOnNode(_pwFocusNode);
+                },
+                readOnly: true,
+                validator: _validateBirthday,
+                onSaved: _saveBday,
               ),
               TextFormField(
                 controller: _pwController,

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:love_book/core/models/user.dart';
 import 'package:love_book/core/viewmodels/profile_model.dart';
-import 'package:love_book/ui/widgets/profile_image.dart';
+import 'package:love_book/ui/widgets/profile/profile_image.dart';
 import 'package:love_book/utils/styles.dart';
 import 'package:provider/provider.dart';
 
@@ -18,9 +18,6 @@ class ProfileView extends StatelessWidget {
         backgroundColor: Colors.white,
         elevation: 0,
         iconTheme: IconThemeData(color: theme.primaryColor),
-        actions: <Widget>[
-          // TODO: route to edit view
-        ],
       ),
       body: Consumer<ProfileModel>(builder: (context, model, child) {
         return _buildBody(
@@ -120,7 +117,7 @@ class ProfileView extends StatelessWidget {
       _buildProfileItemValue(label: 'Email', value: user.email),
       _buildProfileItemValue(
         label: 'Birthday',
-        value: 'August 23, 1996',
+        value: user.formattedBirthday,
         isLargeDivider: true,
       ),
     ];

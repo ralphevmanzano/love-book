@@ -14,11 +14,11 @@ class AuthModel extends BaseModel {
   
   Stream<AuthState> get authState => _authService.authState;
   
-  Future<void> register(String name, String email, String password) async {
+  Future<void> register(User user, String password) async {
     try {
       setState(ViewState.Busy);
-      User user = await _authService.register(name, email, password);
-      await _userService.addUser(user.userId, user.toJson());
+      User userRegistered = await _authService.register(user, password);
+      await _userService.addUser(userRegistered.userId, userRegistered.toJson());
       setState(ViewState.Idle);
     } catch (e) {
       setState(ViewState.Idle);

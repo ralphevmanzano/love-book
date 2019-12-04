@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:love_book/core/viewmodels/search_model.dart';
 import 'package:love_book/core/viewstate.dart';
 import 'package:love_book/ui/views/base_view.dart';
-import 'package:love_book/ui/widgets/image_notice.dart';
-import 'package:love_book/ui/widgets/search_item.dart';
+import 'package:love_book/ui/widgets/home/image_notice.dart';
+import 'package:love_book/ui/widgets/search/search_item.dart';
 import 'package:love_book/utils/debouncer.dart';
 
 class SearchView extends StatefulWidget {
