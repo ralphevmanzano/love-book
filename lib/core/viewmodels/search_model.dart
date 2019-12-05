@@ -2,8 +2,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:love_book/core/models/alert/alert_request.dart';
 import 'package:love_book/core/models/request.dart';
 import 'package:love_book/core/models/user.dart';
-import 'package:love_book/core/service/requests_service.dart';
-import 'package:love_book/core/service/user_service.dart';
+import 'package:love_book/core/services/requests_service.dart';
+import 'package:love_book/core/services/user_service.dart';
 import 'package:love_book/core/viewmodels/base_model.dart';
 import 'package:love_book/locator.dart';
 

@@ -21,9 +21,15 @@ class SearchItem extends StatelessWidget {
             AspectRatio(
               aspectRatio: 1,
               child: CircleAvatar(
-                child: CircleAvatar(
-                  radius: 20,
-                  backgroundImage: NetworkImage(photoUrl),
+                backgroundColor: Theme.of(context).primaryColor,
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(24),
+                  child: photoUrl.isNotEmpty
+                      ? Image.network(
+                          photoUrl,
+                          fit: BoxFit.fill,
+                        )
+                      : Icon(Icons.account_circle),
                 ),
               ),
             ),

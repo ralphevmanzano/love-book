@@ -1,6 +1,6 @@
 import 'package:love_book/core/models/user.dart';
-import 'package:love_book/core/service/auth_service.dart';
-import 'package:love_book/core/service/user_service.dart';
+import 'package:love_book/core/services/auth_service.dart';
+import 'package:love_book/core/services/user_service.dart';
 import 'package:love_book/core/viewmodels/base_model.dart';
 
 import '../../locator.dart';

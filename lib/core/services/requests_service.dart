@@ -5,20 +5,19 @@ import 'package:love_book/core/api/requests_api.dart';
 import 'package:love_book/core/models/request.dart';
 
 class RequestsService implements RequestsApi {
-  final Firestore _db = Firestore.instance;
+  final CollectionReference _ref = Firestore.instance.collection('requests');
 
   Stream<DocumentSnapshot> fetchRequests(String uid) {
-    return _db.collection('requests').document(uid).snapshots();
+    return _ref.document(uid).snapshots();
   }
 
   @override
   Future<void> addRequest(String uid, Request request) {
-    return _db.collection('requests').document(uid).setData(request.toJson());
+    return _ref.document(uid).setData(request.toJson());
   }
 
   @override
   Future<void> removeRequest(String requestId) {
-    // TODO: implement removeRequest
-    return null;
+    return _ref.document(requestId).delete();
   }
 }

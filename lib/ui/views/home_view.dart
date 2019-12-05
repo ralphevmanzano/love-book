@@ -41,7 +41,7 @@ class _HomeViewState extends State<HomeView> {
           elevation: 0,
           iconTheme: IconThemeData(color: theme.primaryColor),
         ),
-        drawer: HomeDrawer(),
+        drawer: HomeDrawer(model.user),
         body: _buildBody(model.user, width, theme),
       ),
     );

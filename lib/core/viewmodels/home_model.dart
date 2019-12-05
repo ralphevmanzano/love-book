@@ -4,9 +4,9 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:love_book/core/models/alert/alert_request.dart';
 import 'package:love_book/core/models/request.dart';
 import 'package:love_book/core/models/user.dart';
-import 'package:love_book/core/service/auth_service.dart';
-import 'package:love_book/core/service/requests_service.dart';
-import 'package:love_book/core/service/user_service.dart';
+import 'package:love_book/core/services/auth_service.dart';
+import 'package:love_book/core/services/requests_service.dart';
+import 'package:love_book/core/services/user_service.dart';
 import 'package:love_book/core/viewmodels/base_model.dart';
 import 'package:love_book/core/viewstate.dart';
 import 'package:love_book/locator.dart';
@@ -33,19 +33,20 @@ class HomeModel extends BaseModel {
     if (snapshot.data == null)
       _request = null;
     else {
-      _request = Request.fromMap(snapshot.data);
+      _request = Request.fromSnapshot(snapshot);
       final alertRequest = AlertRequest(
           title: 'New relationship request!',
           description:
           '${_request.fromName} has requested a relationship with you. Do you confirm this request?',
-          posButtonTitle: 'Ok',
-          negButtonTitle: 'Cancel',
+          posButtonTitle: 'Confirm',
+          negButtonTitle: 'Decline',
           photoUrl: _request.fromPhotoUrl);
     
       final response = await showAlert(alertRequest);
       if (response.confirmed) {
         print('Confirmed request!');
       } else {
+        await _requestsService.removeRequest(_request.id);
         print('Canceled request!');
       }
     }

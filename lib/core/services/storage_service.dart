@@ -1,7 +1,7 @@
 import 'dart:io';
 
 import 'package:firebase_storage/firebase_storage.dart';
-import 'package:love_book/core/service/user_service.dart';
+import 'package:love_book/core/services/user_service.dart';
 import 'package:love_book/core/viewmodels/auth_model.dart';
 import 'package:love_book/locator.dart';
 

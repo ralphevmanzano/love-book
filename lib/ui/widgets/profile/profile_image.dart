@@ -4,7 +4,7 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:love_book/core/service/storage_service.dart';
+import 'package:love_book/core/services/storage_service.dart';
 import 'package:love_book/locator.dart';
 import 'package:love_book/ui/widgets/profile/choose_photo_widget.dart';
 
@@ -110,12 +110,17 @@ class _ProfileImageState extends State<ProfileImage> {
   }
 
   Widget _buildCircleAvatarImage() {
+    final imageRadius = (widget.circleAvatarRadius * 2) - 4;
     return CircleAvatar(
       radius: widget.circleAvatarRadius,
       backgroundColor: Colors.white,
-      child: CircleAvatar(
-        radius: widget.circleAvatarRadius - 2,
-        backgroundImage: _renderImage(),
+      child: SizedBox(
+        width: imageRadius,
+        height: imageRadius,
+        child: ClipRRect(
+          borderRadius: BorderRadius.circular(imageRadius),
+          child: _renderImage(),
+        ),
       ),
     );
   }
@@ -157,12 +162,12 @@ class _ProfileImageState extends State<ProfileImage> {
     if (imgSource != null) _pickImage(imgSource, theme);
   }
 
-  ImageProvider _renderImage() {
+  Widget _renderImage() {
     if (_imageFile != null) {
       print('Load image in file');
-      return FileImage(_imageFile);
+      return Image.file(_imageFile);
     } else if (widget.photoUrl.isNotEmpty) {
-      return NetworkImage(widget.photoUrl);
+      return Image.network(widget.photoUrl);
     }
     return null;
   }

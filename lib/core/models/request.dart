@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class Request {
+  String id;
   String fromId;
   String fromPhotoUrl;
   String toId;
@@ -27,15 +28,10 @@ class Request {
   }
 
   Request.fromSnapshot(DocumentSnapshot ss)
-      : fromId = ss['fromId'] ?? '',
+      : id = ss.documentID,
+        fromId = ss['fromId'] ?? '',
         toId = ss['toId'] ?? '',
         fromPhotoUrl = ss['fromPhotoUrl'],
-        createdAt = ss['createdAt'];
-
-  Request.fromMap(Map<String, dynamic> map)
-      : fromId = map['fromId'] ?? '',
-        toId = map['toId'] ?? '',
-        fromPhotoUrl = map['fromPhotoUrl'],
-        createdAt = map['createdAt'],
-        fromName = map['fromName'];
+        createdAt = ss['createdAt'],
+        fromName = ss['fromName'];
 }

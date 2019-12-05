@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:love_book/core/models/alert/alert_request.dart';
 import 'package:love_book/core/models/alert/alert_response.dart';
-import 'package:love_book/core/service/dialog_service.dart';
+import 'package:love_book/core/services/dialog_service.dart';
 import 'package:love_book/locator.dart';
 
 import '../viewstate.dart';

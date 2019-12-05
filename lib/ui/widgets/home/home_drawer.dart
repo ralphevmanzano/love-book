@@ -1,9 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:love_book/core/models/user.dart';
 import 'package:love_book/core/viewmodels/auth_model.dart';
 import 'package:love_book/ui/routes/routes.dart';
 import 'package:provider/provider.dart';
 
 class HomeDrawer extends StatelessWidget {
+  final User user;
+
+  HomeDrawer(this.user);
+
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
@@ -13,9 +18,11 @@ class HomeDrawer extends StatelessWidget {
       child: ListView(
         padding: EdgeInsets.zero,
         children: <Widget>[
-          DrawerHeader(
-            child: Text('Drawer Header'),
-            decoration: BoxDecoration(color: Theme.of(context).primaryColor),
+          UserAccountsDrawerHeader(
+            accountEmail: Text(user.email),
+            arrowColor: Colors.white,
+            currentAccountPicture: Image.network(user.photoUrl),
+            accountName: Text(user.name),
           ),
           ListTile(
             title: Text('Profile'),

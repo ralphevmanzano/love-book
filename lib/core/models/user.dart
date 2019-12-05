@@ -29,10 +29,14 @@ class User {
     };
   }
 
-  String get formattedBirthday => Jiffy(
-        DateTime.fromMicrosecondsSinceEpoch(
-            this.birthday.microsecondsSinceEpoch),
-      ).yMMMd;
+  String get formattedBirthday {
+    if (this.birthday == null) {
+      return '-';
+    }
+    return Jiffy(
+      DateTime.fromMicrosecondsSinceEpoch(this.birthday.microsecondsSinceEpoch),
+    ).yMMMd;
+  }
 
   bool hasNoPartner() {
     return partnerId.isEmpty || partnerId == null;
